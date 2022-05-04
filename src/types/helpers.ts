@@ -13,6 +13,6 @@ export type GaleTuplePreference = [string, GalePreference];
 export type GaleParams = GaleTuplePreference[];
 
 export type GaleParamsComplete = {
-  male: GaleParams;
-  female: GaleParams;
+  males: GaleParams;
+  females: GaleParams;
 };

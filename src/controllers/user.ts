@@ -11,10 +11,10 @@ export const getAllUsersPreference = (req: Request, res: Response) => {
     const body: PreferenceBody = req.body;
 
     if (body.method === 'gale') {
-      const male: GaleParams = req.body.inputParams.male;
-      const female: GaleParams = req.body.inputParams.female;
+      const males: GaleParams = req.body.inputParams.males;
+      const females: GaleParams = req.body.inputParams.females;
 
-      const galeShapely = GaleShapely(male, female);
+      const galeShapely = GaleShapely(males, females);
       const matches = galeShapely.match();
 
       return res.status(200).json({matches, message: 'Success match!'});
@@ -29,6 +29,8 @@ export const getAllUsersPreference = (req: Request, res: Response) => {
       throw 'Invalid preference method';
     }
   } catch (error) {
-    return res.status(500).json({matches: [], message: 'Server error!', error});
+    return res
+      .status(500)
+      .json({matches: [], message: 'Server error!', error: error.message});
   }
 };
