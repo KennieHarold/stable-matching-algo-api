@@ -1,10 +1,9 @@
-// https://github.com/gfornari/stable-roommates-problem/blob/master/stable-roommates-algorithm.js
+// Source: https://github.com/gfornari/stable-roommates-problem/blob/master/stable-roommates-algorithm.js
 
-type SN = string | number;
-type IrvingsParamType = string[][];
+import {IrvingsParams, SN} from 'types/helpers';
 
 class Irvings {
-  computeMatches = (preferences: IrvingsParamType) => {
+  computeMatches = (preferences: IrvingsParams) => {
     const {prefs, accepts} = this.firstPhase(preferences);
     const _prefs = this.secondPhase(prefs, accepts);
 
@@ -14,7 +13,7 @@ class Irvings {
   rejectSymmetrically = (
     i: SN,
     j: SN,
-    prefs: IrvingsParamType | Record<string, string>,
+    prefs: IrvingsParams | Record<string, string>,
   ) => {
     const indexJ = prefs[i].indexOf(j);
     if (indexJ > -1) prefs[i].splice(indexJ, 1);
@@ -25,8 +24,8 @@ class Irvings {
   acceptProposal = (
     i: SN,
     preferred: SN,
-    proposals: IrvingsParamType | Record<string, string>,
-    accepts: IrvingsParamType | Record<string, string>,
+    proposals: IrvingsParams | Record<string, string>,
+    accepts: IrvingsParams | Record<string, string>,
   ) => {
     proposals[i] = preferred;
     accepts[preferred] = i;
@@ -35,8 +34,8 @@ class Irvings {
   wouldBreakup = (
     preferred: SN,
     i: SN,
-    accepts: IrvingsParamType | Record<string, string>,
-    prefs: IrvingsParamType,
+    accepts: IrvingsParams | Record<string, string>,
+    prefs: IrvingsParams,
   ) => {
     const indexCurrentProposal = prefs[preferred].indexOf(accepts[preferred]);
     const indexNewProposal = prefs[preferred].indexOf(i);
@@ -46,9 +45,9 @@ class Irvings {
   breakupFor = (
     preferred: SN,
     i: SN,
-    proposals: IrvingsParamType | Record<string, string>,
-    accepts: IrvingsParamType | Record<string, string>,
-    prefs: IrvingsParamType | Record<string, string>,
+    proposals: IrvingsParams | Record<string, string>,
+    accepts: IrvingsParams | Record<string, string>,
+    prefs: IrvingsParams | Record<string, string>,
   ) => {
     proposals[i] = preferred;
     const oldAccept = accepts[preferred];
@@ -57,7 +56,7 @@ class Irvings {
     return oldAccept;
   };
 
-  firstPhase = (prefs: IrvingsParamType) => {
+  firstPhase = (prefs: IrvingsParams) => {
     const unmatched = [...Array(prefs.length).keys()];
 
     const proposals = {};
@@ -90,8 +89,8 @@ class Irvings {
   };
 
   secondPhase = (
-    prefs: IrvingsParamType,
-    accepts: IrvingsParamType | Record<string, string>,
+    prefs: IrvingsParams,
+    accepts: IrvingsParams | Record<string, string>,
   ) => {
     for (let i = 0; i < prefs.length; i++) {
       const indexAccept = prefs[i].indexOf(accepts[i]);
@@ -100,7 +99,7 @@ class Irvings {
         const toRemove = JSON.parse(
           JSON.stringify(prefs[i].slice(indexAccept + 1)),
         );
-        toRemove.forEach((r) => this.rejectSymmetrically(i, r, prefs));
+        toRemove.forEach((r: string) => this.rejectSymmetrically(i, r, prefs));
       }
     }
 
@@ -109,7 +108,7 @@ class Irvings {
 
   getRotation = (
     i: SN,
-    prefs: IrvingsParamType,
+    prefs: IrvingsParams,
     secondChoices: string[],
     lastChoices: SN[] = [],
   ) => {
@@ -141,7 +140,7 @@ class Irvings {
   removeRotation = (
     secondChoices: string[],
     lastChoices: string[],
-    prefs: IrvingsParamType,
+    prefs: IrvingsParams,
   ) => {
     let i = lastChoices.indexOf(lastChoices[lastChoices.length - 1]);
 
@@ -150,7 +149,7 @@ class Irvings {
     }
   };
 
-  thirdPhase = (prefs: IrvingsParamType) => {
+  thirdPhase = (prefs: IrvingsParams) => {
     let i = 0;
 
     while (i < prefs.length) {
@@ -184,4 +183,4 @@ class Irvings {
   };
 }
 
-module.exports = () => new Irvings();
+export default () => new Irvings();

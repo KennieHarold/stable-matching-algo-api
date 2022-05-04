@@ -1,22 +1,20 @@
-// https://github.com/alextanhongpin/stable-marriage-problem/blob/master/javascript/stable-matching.js
+// Source: https://github.com/alextanhongpin/stable-marriage-problem/blob/master/javascript/stable-matching.js
 
-type PreferenceType = string[];
-type TuplePreferenceType = [string, PreferenceType];
-type GaleParamType = TuplePreferenceType[];
+import {GaleParams, GalePreference, GaleTuplePreference} from 'types/helpers';
 
-const toObject = (arr: GaleParamType) => {
+const toObject = (arr: GaleParams) => {
   return arr.reduce((obj, [head, tail]) => {
     obj[head] = tail;
     return obj;
   }, {});
 };
 
-const takeFirst = (arr: GaleParamType) => {
+const takeFirst = (arr: GaleParams) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   return arr.map(([head, _]) => head);
 };
 
-const createHashTable = (arr: GaleParamType) => {
+const createHashTable = (arr: GaleParams) => {
   return arr.reduce((obj, [head, tail]) => {
     if (!obj[head]) {
       obj[head] = {};
@@ -30,11 +28,11 @@ const createHashTable = (arr: GaleParamType) => {
 };
 
 class GaleShapely {
-  maleNames: PreferenceType;
-  maleChoices: TuplePreferenceType | Record<string, PreferenceType>;
+  maleNames: GalePreference;
+  maleChoices: GaleTuplePreference | Record<string, GalePreference>;
   scores: Record<string, Record<string, number>>;
 
-  constructor(males: GaleParamType, females: GaleParamType) {
+  constructor(males: GaleParams, females: GaleParams) {
     this.maleNames = takeFirst(males);
     this.maleChoices = toObject(males);
     this.scores = createHashTable(females);
@@ -112,6 +110,6 @@ class GaleShapely {
   }
 }
 
-module.exports = (male: GaleParamType, females: GaleParamType) => {
+export default (male: GaleParams, females: GaleParams) => {
   return new GaleShapely(male, females);
 };
