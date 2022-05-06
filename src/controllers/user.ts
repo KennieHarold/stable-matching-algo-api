@@ -43,10 +43,49 @@ export const addUser = (req: Request, res: Response) => {
     const id = uuidv4();
     const body: UserBody = req.body;
 
-    Users.set(id, {...body});
+    const UsersJSON = Users.JSON();
+
+    let highPreferenceId = 0;
+
+    Object.keys(UsersJSON).forEach((key) => {
+      const preferenceId = parseInt(UsersJSON[key].preferenceId);
+      highPreferenceId =
+        preferenceId > highPreferenceId ? preferenceId : highPreferenceId;
+    });
+
+    Users.set(id, {...body, preferenceId: (highPreferenceId + 1).toString()});
 
     return res.status(200).json({message: 'Success'});
   } catch (error) {
-    res.status(500).json({error: error.message});
+    return res.status(500).json({error: error.message});
+  }
+};
+
+export const addPreference = (req: Request, res: Response) => {
+  try {
+    const Users = new JSONdb('db/Users.json');
+    const UsersJSON = Users.JSON();
+    const userId = req.params.id;
+    const dbLength = Object.keys(UsersJSON).length;
+    const preferences: string[] = req.body.preferences;
+
+    if (preferences.length === dbLength - 1) {
+      const usersPreferenceId = UsersJSON[userId].preferenceId;
+
+      if (!preferences.includes(usersPreferenceId)) {
+        Users.set(userId, {
+          ...UsersJSON[userId],
+          preferences: [...preferences],
+        });
+      } else {
+        return res.status(400).json({error: "Can't preference current user!"});
+      }
+    } else {
+      return res.status(400).json({error: 'Invalid preferences length'});
+    }
+
+    return res.status(200).json({message: 'Success'});
+  } catch (error) {
+    return res.status(500).json({error: error.message});
   }
 };

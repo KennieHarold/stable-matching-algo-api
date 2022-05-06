@@ -6,10 +6,9 @@ export interface PreferenceBody {
 }
 
 export interface UserBody {
-  id: string;
   name: string;
   preferenceId: string;
-  preferences: GaleParamsComplete | IrvingsParams;
+  preferences: string[];
 }
 
 export type PreferenceMethod = 'gale' | 'irvings';
