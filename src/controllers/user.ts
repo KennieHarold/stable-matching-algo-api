@@ -1,10 +1,12 @@
-import GaleShapely from 'helpers/gale-shapely';
-import Irvings from 'helpers/irvings';
+import {v4 as uuidv4} from 'uuid';
+import JSONdb from 'simple-json-db';
 
 import {Request, Response} from 'express';
-
-import {PreferenceBody} from 'types/api';
+import {PreferenceBody, UserBody} from 'types/api';
 import {GaleParams, IrvingsParams} from 'types/helpers';
+
+import GaleShapely from 'helpers/gale-shapely';
+import Irvings from 'helpers/irvings';
 
 export const getAllUsersPreference = (req: Request, res: Response) => {
   try {
@@ -32,5 +34,19 @@ export const getAllUsersPreference = (req: Request, res: Response) => {
     return res
       .status(500)
       .json({matches: [], message: 'Server error!', error: error.message});
+  }
+};
+
+export const addUser = (req: Request, res: Response) => {
+  try {
+    const Users = new JSONdb('db/Users.json');
+    const id = uuidv4();
+    const body: UserBody = req.body;
+
+    Users.set(id, {...body});
+
+    return res.status(200).json({message: 'Success'});
+  } catch (error) {
+    res.status(500).json({error: error.message});
   }
 };
