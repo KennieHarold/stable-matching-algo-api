@@ -1,14 +1,15 @@
-import {GaleParamsComplete, IrvingsParams} from './helpers';
-
 export interface PreferenceBody {
   method: 'irvings' | 'gale';
-  inputParams: GaleParamsComplete | IrvingsParams;
 }
 
 export interface UserBody {
   name: string;
+  gender: 'male' | 'female';
   preferenceId: string;
-  preferences: string[];
+  preferences: {
+    gale: string[];
+    irvings: string[];
+  };
 }
 
 export type PreferenceMethod = 'gale' | 'irvings';

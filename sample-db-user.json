@@ -1,0 +1,56 @@
+{
+  "002890ec-7d8e-4650-ac3c-a4f4254fdd4b": {
+    "name": "harold",
+    "gender": "male",
+    "preferenceId": "0",
+    "preferences": {
+      "gale": ["0", ["3", "4", "5"]],
+      "irvings": ["1", "2", "4", "3", "5"]
+    }
+  },
+  "2087568d-ef60-4e34-a25e-0d2a11beaccc": {
+    "name": "kennie",
+    "gender": "male",
+    "preferenceId": "1",
+    "preferences": {
+      "irvings": ["0", "2", "4", "3", "5"],
+      "gale": ["1", ["4", "5", "3"]]
+    }
+  },
+  "d2c94796-38f3-4ae5-a6fb-371d2e60b0e3": {
+    "name": "john",
+    "gender": "male",
+    "preferenceId": "2",
+    "preferences": {
+      "irvings": ["1", "4", "3", "0", "5"],
+      "gale": ["2", ["3", "4", "5"]]
+    }
+  },
+  "fbe087ac-7afd-44c0-812c-88c805152475": {
+    "name": "bea",
+    "gender": "female",
+    "preferenceId": "3",
+    "preferences": {
+      "irvings": ["1", "4", "2", "0", "5"],
+      "gale": ["3", ["1", "2", "0"]]
+    }
+  },
+  "c759e6f5-60c5-4e24-bc35-7e074426a14a": {
+    "name": "rose",
+    "gender": "female",
+    "preferenceId": "4",
+    "preferences": {
+      "irvings": ["3", "1", "2", "0", "5"],
+      "gale": ["4", ["0", "1", "2"]]
+    }
+  },
+  "3e690037-4a10-4d06-9152-da4a91512965": {
+    "name": "jane",
+    "gender": "female",
+    "preferenceId": "5",
+    "preferences": {
+      "irvings": ["1", "3", "2", "4", "0"],
+      "gale": ["5", ["2", "0", "1"]]
+    }
+  }
+}

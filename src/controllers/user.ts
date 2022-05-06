@@ -7,21 +7,24 @@ import {GaleParams, IrvingsParams} from 'types/helpers';
 
 import GaleShapely from 'helpers/gale-shapely';
 import Irvings from 'helpers/irvings';
+import {getParams} from 'helpers/parser';
 
 export const getAllUsersPreference = (req: Request, res: Response) => {
   try {
+    // Get all users preference
+    const {galeParams, irvingsParams} = getParams();
     const body: PreferenceBody = req.body;
 
     if (body.method === 'gale') {
-      const males: GaleParams = req.body.inputParams.males;
-      const females: GaleParams = req.body.inputParams.females;
+      const males: GaleParams = galeParams.males;
+      const females: GaleParams = galeParams.females;
 
       const galeShapely = GaleShapely(males, females);
       const matches = galeShapely.match();
 
       return res.status(200).json({matches, message: 'Success match!'});
     } else if (body.method === 'irvings') {
-      const inputs: IrvingsParams = req.body.inputParams;
+      const inputs: IrvingsParams = irvingsParams;
 
       const irvings = Irvings();
       const matches = irvings.computeMatches(inputs);
@@ -45,7 +48,7 @@ export const addUser = (req: Request, res: Response) => {
 
     const UsersJSON = Users.JSON();
 
-    let highPreferenceId = 0;
+    let highPreferenceId = -1;
 
     Object.keys(UsersJSON).forEach((key) => {
       const preferenceId = parseInt(UsersJSON[key].preferenceId);
@@ -53,7 +56,11 @@ export const addUser = (req: Request, res: Response) => {
         preferenceId > highPreferenceId ? preferenceId : highPreferenceId;
     });
 
-    Users.set(id, {...body, preferenceId: (highPreferenceId + 1).toString()});
+    Users.set(id, {
+      ...body,
+      preferenceId: (highPreferenceId + 1).toString(),
+      preferences: {irvings: [], gale: []},
+    });
 
     return res.status(200).json({message: 'Success'});
   } catch (error) {
@@ -67,25 +74,51 @@ export const addPreference = (req: Request, res: Response) => {
     const UsersJSON = Users.JSON();
     const userId = req.params.id;
     const dbLength = Object.keys(UsersJSON).length;
-    const preferences: string[] = req.body.preferences;
+    const preferences = req.body.preferences;
+    const usersPreferenceId = UsersJSON[userId].preferenceId;
 
-    if (preferences.length === dbLength - 1) {
-      const usersPreferenceId = UsersJSON[userId].preferenceId;
-
-      if (!preferences.includes(usersPreferenceId)) {
-        Users.set(userId, {
-          ...UsersJSON[userId],
-          preferences: [...preferences],
-        });
-      } else {
-        return res.status(400).json({error: "Can't preference current user!"});
-      }
-    } else {
-      return res.status(400).json({error: 'Invalid preferences length'});
+    if (!preferences.gale || !preferences.irvings) {
+      return res.status(400).json({error: 'Missing preferences'});
     }
+
+    if (preferences.irvings.length !== dbLength - 1) {
+      return res.status(400).json({error: 'Invalid irvings preferences'});
+    }
+
+    if (dbLength % 2 !== 0 || dbLength / 2 !== preferences.gale.length) {
+      return res.status(400).json({error: 'Invalid gale preferences'});
+    }
+
+    if (
+      preferences.irvings.includes(usersPreferenceId) ||
+      preferences.gale.includes(usersPreferenceId)
+    ) {
+      return res.status(400).json({error: "Can't preference current user!"});
+    }
+
+    const usersKeys = Object.keys(UsersJSON);
+    for (let i = 0; i < preferences.gale.length; i++) {
+      for (let j = 0; j < usersKeys.length; j++) {
+        if (preferences.gale[i] === UsersJSON[usersKeys[j]].preferenceId) {
+          if (UsersJSON[userId].gender === UsersJSON[usersKeys[j]].gender) {
+            return res.status(400).json({error: 'Cant preference same gender'});
+          }
+        }
+      }
+    }
+
+    Users.set(userId, {
+      ...UsersJSON[userId],
+      preferences: {
+        ...UsersJSON[userId].preferences,
+        irvings: [...preferences.irvings],
+        gale: [usersPreferenceId, [...preferences.gale]],
+      },
+    });
 
     return res.status(200).json({message: 'Success'});
   } catch (error) {
+    console.log(error);
     return res.status(500).json({error: error.message});
   }
 };
