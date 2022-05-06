@@ -47,6 +47,17 @@ export const addUser = (req: Request, res: Response) => {
     const body: UserBody = req.body;
 
     const UsersJSON = Users.JSON();
+    const userKeys = Object.keys(UsersJSON);
+
+    for (let i = 0; i < userKeys.length; i++) {
+      if (UsersJSON[userKeys[i]].name === body.name) {
+        return res.status(200).json({message: 'Name already exists!'});
+      }
+    }
+
+    if (Object.keys(UsersJSON).length >= 10) {
+      return res.status(400).json({error: 'Max users reached!'});
+    }
 
     let highPreferenceId = -1;
 
@@ -62,7 +73,7 @@ export const addUser = (req: Request, res: Response) => {
       preferences: {irvings: [], gale: []},
     });
 
-    return res.status(200).json({message: 'Success'});
+    return res.status(200).json({message: 'Success!'});
   } catch (error) {
     return res.status(500).json({error: error.message});
   }
@@ -120,5 +131,24 @@ export const addPreference = (req: Request, res: Response) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({error: error.message});
+  }
+};
+
+export const getUsers = (req: Request, res: Response) => {
+  try {
+    const Users = new JSONdb('db/Users.json');
+    const UsersJSON = Users.JSON();
+    const data = [];
+
+    Object.keys(UsersJSON).forEach((key) => {
+      data.push({
+        id: key,
+        ...UsersJSON[key],
+      });
+    });
+    return res.status(200).json({users: data});
+  } catch (error) {
+    console.log(error);
+    return res.status(500);
   }
 };

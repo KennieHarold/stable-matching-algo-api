@@ -1,0 +1,68 @@
+<div class="w-75 m-auto my-5">
+  <h5>List of users in the server</h5>
+  <span>We need&nbsp;<span id="users-legth">0</span>/10&nbsp;users</span>
+
+  <div class="row gx-5 mt-4">
+    <div class="col-md-6 col-sm-12">
+      <table class="table mt-4">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Is preferences added?</th>
+          </tr>
+        </thead>
+        <tbody id="users-table"></tbody>
+      </table>
+    </div>
+    <div class="col-md-6 col-sm-12">
+      <div class="bg-white rounded shadow p-4">
+        <div id="login-container" style="display: block">
+          <h5>Create or login a user</h5>
+          <div class="input-group mb-3 mt-3">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Enter your name"
+              aria-label="Name"
+              aria-describedby="basic-addon1"
+              id="name-input"
+            />
+          </div>
+
+          <div class="mb-4">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="flexRadioDefault"
+                id="check-male"
+                value="male"
+                checked
+              />
+              <label class="form-check-label" for="check-male">Male</label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="flexRadioDefault"
+                id="check-female"
+                value="female"
+              />
+              <label class="form-check-label" for="check-female">
+                Female
+              </label>
+            </div>
+          </div>
+
+          <button id="login-btn" class="btn btn-primary">Submit!</button>
+        </div>
+
+        <div id="welcome-container" style="display: none">
+          <h5>Welcome&nbsp;<span id="login-user">user</span>!</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
