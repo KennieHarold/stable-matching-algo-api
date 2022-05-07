@@ -1,6 +1,15 @@
 <div class="w-75 m-auto my-5">
-  <h5>List of users in the server</h5>
-  <span>We need&nbsp;<span id="users-legth">0</span>/10&nbsp;users</span>
+  <span class="d-block">
+    We need:&nbsp;<span id="users-legth">0</span>/10&nbsp;users
+  </span>
+  <span class="d-block w-50 fst-italic">
+    Requirements: Males and females must be equal to 5 and all users must have
+    preferences (all users must have "Is preferences added?" to true)
+  </span>
+
+  <div class="mt-4" onclick="clearUsersDB()">
+    <button class="btn btn-danger">Clear DB</button>
+  </div>
 
   <div class="row gx-5 mt-4">
     <div class="col-md-6 col-sm-12">
@@ -9,6 +18,7 @@
           <tr>
             <th scope="col">#</th>
             <th scope="col">Name</th>
+            <th scope="col">Gender</th>
             <th scope="col">Is preferences added?</th>
           </tr>
         </thead>
@@ -63,20 +73,49 @@
           <h5>Welcome&nbsp;<span id="login-user">user</span>!</h5>
           <span>Your gender:&nbsp;<span id="user-gender">None</span></span>
 
-          <div id="preferences-drag-list" class="row gx-2 mt-4 mb-3">
-            <div class="col-md-6">
-              <span class="d-block mb-3">Arrange users for Irvings</span>
-              <div id="irvings-preferences-list"></div>
+          <div id="preferences-drag-list" style="display: none">
+            <div class="row gx-2 mt-4 mb-3">
+              <div class="col-md-6">
+                <span class="d-block mb-3">Arrange users for Irvings</span>
+                <div id="irvings-preferences-list"></div>
+              </div>
+              <div class="col-md-6">
+                <span class="d-block mb-3">Arrange users for Gale-Shapely</span>
+                <div id="gale-preferences-list"></div>
+              </div>
             </div>
-            <div class="col-md-6">
-              <span class="d-block mb-3">Arrange users for Gale-Shapely</span>
-              <div id="gale-preferences-list"></div>
-            </div>
+
+            <button id="make-preferences-btn" class="btn btn-primary">
+              Submit!
+            </button>
           </div>
 
-          <button id="make-preferences-btn" class="btn btn-primary">
-            Submit!
-          </button>
+          <div id="match-container" class="mt-4" style="display: none">
+            <div class="d-flex flex-row">
+              <button
+                class="btn btn-primary me-2"
+                onclick="geAllPreferences('irvings')"
+              >
+                Find match using Irvings
+              </button>
+              <button
+                class="btn btn-primary"
+                onclick="geAllPreferences('gale')"
+              >
+                Find match using Gale-Shapely
+              </button>
+            </div>
+            <span class="d-block mt-3">
+              Your match is:&nbsp;<span id="user-match">None</span>
+            </span>
+            <span class="d-block mt-2">
+              Algorithm:&nbsp;<span id="user-algorithm">Not yet!</span>
+            </span>
+          </div>
+
+          <div id="insufficient-users-alert" class="mt-5">
+            Please fill in 10 users before matching!
+          </div>
         </div>
       </div>
     </div>

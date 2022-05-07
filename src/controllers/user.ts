@@ -11,6 +11,40 @@ import {getParams} from 'helpers/parser';
 
 export const getAllUsersPreference = (req: Request, res: Response) => {
   try {
+    const Users = new JSONdb('db/Users.json');
+    const UsersJSON = Users.JSON();
+    const userKeys = Object.keys(UsersJSON);
+
+    // Make sure male and females are equal
+    let maleLength = 0;
+    let femaleLength = 0;
+
+    for (let i = 0; i < userKeys.length; i++) {
+      if (UsersJSON[userKeys[i]].gender === 'male') {
+        maleLength++;
+      } else {
+        femaleLength++;
+      }
+    }
+
+    if (maleLength < 5 && femaleLength < 5) {
+      return res.status(500).json({error: 'All slots are not filled'});
+    }
+
+    if (userKeys.length < 10) {
+      return res.status(500).json({error: 'All slots are not filled'});
+    }
+
+    // Make sure all users have preferences
+    for (let i = 0; i < userKeys.length; i++) {
+      if (
+        UsersJSON[userKeys[i]].preferences.gale.length <= 0 ||
+        UsersJSON[userKeys[i]].preferences.irvings.length <= 0
+      ) {
+        return res.status(500).json({error: 'All preferences must be filled'});
+      }
+    }
+
     // Get all users preference
     const {galeParams, irvingsParams} = getParams();
     const body: PreferenceBody = req.body;
@@ -174,6 +208,22 @@ export const getUsers = (req: Request, res: Response) => {
       });
     });
     return res.status(200).json({users: data});
+  } catch (error) {
+    console.log(error);
+    return res.status(500);
+  }
+};
+
+export const deleteUsers = (req: Request, res: Response) => {
+  try {
+    const Users = new JSONdb('db/Users.json');
+    const UsersJSON = Users.JSON();
+
+    Object.keys(UsersJSON).forEach((key) => {
+      Users.delete(key);
+    });
+
+    return res.status(200).json({message: 'Successfully cleared all users!'});
   } catch (error) {
     console.log(error);
     return res.status(500);

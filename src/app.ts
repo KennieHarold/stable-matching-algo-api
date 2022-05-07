@@ -2,12 +2,14 @@ import bodyParser from 'body-parser';
 import express from 'express';
 import cors from 'cors';
 import {Request} from 'express';
+import fs from 'fs';
 
 import {
   getAllUsersPreference,
   addUser,
   addPreference,
   getUsers,
+  deleteUsers,
 } from './controllers/user';
 
 const app = express();
@@ -36,15 +38,21 @@ const checkLocalHost = (req: Request) => {
   }
 };
 
+//  Setup DB
+if (!fs.existsSync('./db')) {
+  fs.mkdirSync('./db');
+}
+
 app.get('/', (req, res) => {
   const domain = checkLocalHost(req);
   res.render('./index', {domain});
 });
 
 app.get('/api/users', getUsers);
-app.get('/api/users/preference', getAllUsersPreference);
+app.post('/api/users/preference', getAllUsersPreference);
 app.post('/api/user', addUser);
 app.patch('/api/user/preference/:id', addPreference);
+app.delete('/api/users', deleteUsers);
 
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`);
