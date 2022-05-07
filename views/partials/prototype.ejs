@@ -61,8 +61,48 @@
 
         <div id="welcome-container" style="display: none">
           <h5>Welcome&nbsp;<span id="login-user">user</span>!</h5>
+          <span>Your gender:&nbsp;<span id="user-gender">None</span></span>
+
+          <div id="preferences-drag-list" class="row gx-2 mt-4 mb-3">
+            <div class="col-md-6">
+              <span class="d-block mb-3">Arrange users for Irvings</span>
+              <div id="irvings-preferences-list"></div>
+            </div>
+            <div class="col-md-6">
+              <span class="d-block mb-3">Arrange users for Gale-Shapely</span>
+              <div id="gale-preferences-list"></div>
+            </div>
+          </div>
+
+          <button id="make-preferences-btn" class="btn btn-primary">
+            Submit!
+          </button>
         </div>
       </div>
     </div>
   </div>
+  <style>
+    .draggable {
+      cursor: move;
+      margin-bottom: 1rem;
+      user-select: none;
+
+      /* Center the content */
+      align-items: center;
+      display: flex;
+      justify-content: center;
+
+      /* Size */
+      height: 3rem;
+      width: 10rem;
+
+      /* Misc */
+      border: 1px solid #cbd5e0;
+    }
+    .placeholder {
+      background-color: #edf2f7;
+      border: 2px dashed #cbd5e0;
+      margin-bottom: 1rem;
+    }
+  </style>
 </div>

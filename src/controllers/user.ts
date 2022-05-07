@@ -55,10 +55,37 @@ export const addUser = (req: Request, res: Response) => {
       }
     }
 
-    if (Object.keys(UsersJSON).length >= 10) {
+    if (userKeys.length >= 10) {
       return res.status(400).json({error: 'Max users reached!'});
     }
 
+    // Make sure male and females are equal
+    let maleLength = 0;
+    let femaleLength = 0;
+
+    for (let i = 0; i < userKeys.length; i++) {
+      if (UsersJSON[userKeys[i]].gender === 'male') {
+        maleLength++;
+      } else {
+        femaleLength++;
+      }
+    }
+
+    if (body.gender === 'male') {
+      if (maleLength >= 5) {
+        return res
+          .status(400)
+          .json({error: 'All male slots are already filled'});
+      }
+    } else {
+      if (femaleLength >= 5) {
+        return res
+          .status(400)
+          .json({error: 'All female slots are already filled'});
+      }
+    }
+
+    // Add user
     let highPreferenceId = -1;
 
     Object.keys(UsersJSON).forEach((key) => {
